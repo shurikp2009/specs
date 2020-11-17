@@ -9,6 +9,22 @@ RSpec.describe Reminder::JournalAboutFamilyMember, type: :model do
     )
   end
 
+  it "should remind user to journal about family member no often than setting" do
+    should_remind user_with_family_member(
+      to_remind_about: 7.days
+    )
+
+    should_not_remind user, 7.days.from_now - 1.minute
+  end
+
+  it "should remind user to journal about family again after more time passes (according to setting)" do
+    should_remind user_with_family_member(
+      to_remind_about: 7.days
+    )
+
+    should_remind user, 7.days.from_now + 1.minute
+  end
+
   it "should not remind user to journal about family member with unset reminder and no entries" do
     should_not_remind user_with_family_member
   end
@@ -39,7 +55,11 @@ RSpec.describe Reminder::JournalAboutFamilyMember, type: :model do
       create(:entry, members: [ family_member ], user: user, entry_date: entry_at, created_at: entry_at)
     end
 
-    user
+    @user = user
+  end
+
+  def user
+    @user
   end
 
   def seconds_to_days(arg)

@@ -14,12 +14,12 @@ module ReminderSpecHelper
   end
   
   def should_remind(user, time = nil)
-    Time.stub(:now).and_return(time) if time
-    reminded_users.should include(user)
+    check = proc { reminded_users.should include(user) }
+    time ? Timecop.freeze(time, &check) : check.call
   end
 
   def should_not_remind(user, time = nil)
-    Time.stub(:now).and_return(time) if time
-    reminded_users.should_not include(user)
+    check = proc { reminded_users.should_not include(user) }
+    time ? Timecop.freeze(time, &check) : check.call
   end
 end
