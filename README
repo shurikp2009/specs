@@ -4,7 +4,7 @@ If any of the settings is set - it inforces the rule, that notifications of this
 
 Now settings are as follows
 
-Reminder (effective for all subtypes that don't specify any of the settings)
+Reminder (effective for all subtypes that don't specify this setting)
 - global_reminder_interval = 1.hour
 
 Reminder::Birthday
