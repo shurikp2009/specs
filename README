@@ -1,0 +1,31 @@
+I've implemented more elaborate logic for inter-notification times. Now each type of notification has 3 settings - minimum time interval since ANY previous notification ("global_reminder_interval"), time interval since previous notification of EXACTLY THIS type ("reminder_interval"), and, - for notifications related to family members, - time interval since ANY type of notification ABOUT THIS member ("member_reminder_interval").
+
+If any of the settings is set - it inforces the rule, that notifications of this type can't be sent earlier than specified time interval has passed since another notification of corresponding type. If it's set to NIL, notification will be sent regardless (while not constrained by the other 2 settings).
+
+Now settings are as follows
+
+Reminder (effective for all subtypes that don't specify any of the settings)
+- global_reminder_interval = 1.hour
+
+Reminder::Birthday
+- reminder_interval = 1.day
+- global_reminder_interval = nil
+
+Reminder::FamilyMemberBirthday
+- reminder_interval = 1.day
+- global_reminder_interval = nil
+
+Reminder::JournalAboutFamilyMember
+- member_reminder_interval = 1.day
+
+Reminder::Inactivity
+- global_reminder_interval = 24.hours
+
+This, in my opinion, is a simple yet flexible system, that allows to configure desired behaviour.
+
+Now this means, that:
+- Birthday reminders are always sent at 4 a.m. CST, for all the members and user himself, even if they all happen on a single day. They now sent all at once, easy to change though to some interval, like 1.hour, I don't think it's important, given the low probability of the case..
+
+If user received push about family member's birthday, he won't receive a reminder to journal about this member for at least the next 24 hours. (And won't at all the next day, if he journals about him on his birthday).
+
+If user received ANY reminder, he won't receive Inactivity reminder for at least the next 24 hours.
