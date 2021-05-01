@@ -9,7 +9,7 @@ class Reminder < ApplicationRecord
   class_attribute :reminder_interval
   class_attribute :global_reminder_interval
 
-  self.global_reminder_interval = 1.hour
+  self.global_reminder_interval = 24.hours
 
   ALPHA_USERS = [
     'crossfire110@aol.com', 

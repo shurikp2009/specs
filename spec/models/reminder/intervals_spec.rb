@@ -21,8 +21,12 @@ RSpec.describe Reminder, type: :model do
       end
     end
 
-    it "should remind of birthday, and to journal about family member" do
-      reminder_types.should == [:birthday, :journal_about_family_member]
+    # it "should remind of birthday, and to journal about family member" do
+    #   reminder_types.should == [:birthday, :journal_about_family_member]
+    # end
+
+    it "should remind only of own birthday" do
+      reminder_types.should == [:birthday]
     end
   end
 

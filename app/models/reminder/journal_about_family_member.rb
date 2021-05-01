@@ -7,11 +7,12 @@ class Reminder::JournalAboutFamilyMember < Reminder::FamilyMember
     end
 
     def __user_scope__
-      User.
-        joins('inner join users family_subscriber on family_subscriber.id = users.family_subscribe_id').
-        joins("left outer join entries on entries.user_id = family_subscriber.id and entries.created_at >= DATE_SUB(CONVERT_TZ(NOW(), '#{Time.now.formatted_offset}', '+00:00'), INTERVAL `users`.`remind_time` DAY)").
-        where('users.remind_time is not null and users.remind_time > 0').
-        where(entries: {id: nil})
+      base_scope = User.where('users.remind_time is not null and users.remind_time > 0 and family_subscribe_id is not null')
+
+      were_posted_about = base_scope.joins(:assign_entries).where("entries.created_at >= DATE_SUB(CONVERT_TZ(NOW(), '#{Time.now.formatted_offset}', '+00:00'), INTERVAL `users`.`remind_time` DAY)")
+
+      ids = were_posted_about.pluck(:id)
+      ids.empty? ? base_scope : base_scope.where("id not in (?)", ids)
     end
   end
 
